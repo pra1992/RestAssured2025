@@ -1,0 +1,5 @@
+{
+  "short_description": "Creating an incident from FILE",
+  "description": "REST API",
+  "active": "true"
+}
