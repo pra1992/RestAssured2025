@@ -1,0 +1,5 @@
+{
+  "short_description": "Creating an CR from FILE",
+  "description": "REST API CR",
+  "active": "true"
+}
