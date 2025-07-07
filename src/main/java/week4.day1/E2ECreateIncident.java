@@ -18,6 +18,7 @@ public class E2ECreateIncident {
 
     @BeforeClass
     public void setUp(){
+        //Take only the major common items and then only add them in requestSpecification
         requestSpecification = requestSpecBuilder.setBaseUri("https://dev214398.service-now.com/")
                 .setBasePath("api/now/table/{tableName}")
                 .setAuth(basic("admin","gz^1@wDVaL3B"))
