@@ -1,17 +1,24 @@
 package steps;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.it.Ma;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import week3.day2.CreateIncidentRequestBodyPojo;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.*;
 
 public class IncidentSteps {
+    CreateIncidentRequestBodyPojo createIncidentRequestBodyPojo = new CreateIncidentRequestBodyPojo();
     RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
-    Response response;
+    public static Response response = null;
     @Given("user set the baseuri {string} of the service now instance")
     public void user_set_the_baseuri_of_the_service_now_instance(String BaseURI) {
       requestSpecBuilder.setBaseUri(BaseURI);
@@ -35,6 +42,41 @@ public class IncidentSteps {
     @Then("validate user successfully received the response")
     public void validate_user_successfully_received_the_response() {
          response.then().log().all().assertThat().statusCode(200).statusLine(Matchers.containsString("OK")).contentType("application/json");
+    }
 
+    @Given("user gives the payload body")
+    public void user_gives_the_payload_body() {
+        createIncidentRequestBodyPojo.setShort_description("Create an Incident using Cucumber");
+        createIncidentRequestBodyPojo.setDescription("Incident using cucumber");
+        createIncidentRequestBodyPojo.setActive("true");
+    }
+    @When("user hit the POST method")
+    public void user_hit_the_post_method() {
+        response = given().log().all().spec(requestSpecBuilder.build()).contentType(ContentType.JSON).body(createIncidentRequestBodyPojo).when().post();
+    }
+    @Then("validate record is successfully created")
+    public void validate_record_is_successfully_created() {
+        response.then().assertThat().statusCode(201).statusLine(Matchers.containsString("Created"));
+    }
+
+    @Given("user set the multiple pathparameters")
+    public void user_set_the_multiple_pathparameters(DataTable PathParams) {
+       List<List<String>> asLists = PathParams.asLists();
+       for (int i=0; i<asLists.size(); i++){
+           requestSpecBuilder.addPathParam(asLists.get(i).get(0), asLists.get(i).get(1));
+       }
+    }
+
+    @Then("validate user successfully received the response with the correct sysid")
+    public void validate_user_successfully_received_the_response_with_the_correct_sysid(DataTable dataTable) {
+        List<List<String>> asList =dataTable.asLists();
+        for (int i=0; i<asList.size(); i++) {
+            response.then()
+                    .assertThat()
+                    .statusCode(Integer.parseInt(asList.get(i).get(0)))
+                    .statusLine(Matchers.containsString(asList.get(i).get(1)))
+                    .contentType(asList.get(i).get(2))
+                    .body("result.sys_id", Matchers.equalTo(asList.get(i).get(3)));
+        }
     }
 }
