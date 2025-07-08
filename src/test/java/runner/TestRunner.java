@@ -5,7 +5,7 @@ import io.cucumber.testng.CucumberOptions;
 import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
-        features = {".\\src\\test\\resources\\features\\incident.feature:44"},
+        features = {".\\src\\test\\resources\\features\\incident.feature"},
         glue = {"steps"},
         dryRun = false,
         //tags

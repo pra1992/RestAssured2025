@@ -12,6 +12,7 @@ import org.hamcrest.Matchers;
 import week3.day2.CreateIncidentRequestBodyPojo;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 
@@ -74,22 +75,26 @@ public class IncidentSteps {
 
     @Given("user set the multiple pathparameters")
     public void user_set_the_multiple_pathparameters(DataTable PathParams) {
-       List<List<String>> asLists = PathParams.asLists();
-       for (int i=0; i<asLists.size(); i++){
-           requestSpecBuilder.addPathParam(asLists.get(i).get(0), asLists.get(i).get(1));
-       }
+//       List<List<String>> asLists = PathParams.asLists();
+//       for (int i=0; i<asLists.size(); i++){
+//           requestSpecBuilder.addPathParam(asLists.get(i).get(0), asLists.get(i).get(1));
+//       }
+        Map<String, String> maps= PathParams.asMap();
+        requestSpecBuilder.addPathParam("tableName", maps.get("tableName"));
+        requestSpecBuilder.addPathParam("sys_id", maps.get("sys_id"));
     }
 
     @Then("validate user successfully received the response with the correct sysid")
     public void validate_user_successfully_received_the_response_with_the_correct_sysid(DataTable dataTable) {
-        List<List<String>> asList =dataTable.asLists();
-        for (int i=0; i<asList.size(); i++) {
-            response.then()
-                    .assertThat()
-                    .statusCode(Integer.parseInt(asList.get(i).get(0)))
-                    .statusLine(Matchers.containsString(asList.get(i).get(1)))
-                    .contentType(asList.get(i).get(2))
-                    .body("result.sys_id", Matchers.equalTo(asList.get(i).get(3)));
+        Map<String, String> map = dataTable.asMap();
+        response.then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(Integer.parseInt(map.get("StatusCode")))
+                .statusLine(Matchers.containsString(map.get("StatusMessage")))
+                .contentType(map.get("Content-Type"))
+                .body("result.sys_id", Matchers.equalTo(map.get("sys_id")));
         }
     }
-}
+
