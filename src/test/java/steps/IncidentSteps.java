@@ -31,6 +31,12 @@ public class IncidentSteps {
     public void user_set_the_pathparameter_for_as(String string, String string2) {
         requestSpecBuilder.addPathParam("tableName", "incident");
     }
+
+    @Given("user set the header {string} as {string}")
+    public void user_set_the_header_as(String header, String value) {
+        requestSpecBuilder.addHeader(header,value);
+    }
+
     @Given("user set the basic authentication for username and password as {string} and {string}")
     public void user_set_the_basic_authentication_for_username_and_password_as_and(String UserName, String Password) {
         requestSpecBuilder.setAuth(basic("admin","gz^1@wDVaL3B"));
@@ -44,19 +50,26 @@ public class IncidentSteps {
          response.then().log().all().assertThat().statusCode(200).statusLine(Matchers.containsString("OK")).contentType("application/json");
     }
 
-    @Given("user gives the payload body")
-    public void user_gives_the_payload_body() {
-        createIncidentRequestBodyPojo.setShort_description("Create an Incident using Cucumber");
-        createIncidentRequestBodyPojo.setDescription("Incident using cucumber");
-        createIncidentRequestBodyPojo.setActive("true");
+    @Given("user gives the Short Description as {string}")
+    public void user_gives_the_short_description_as(String ShortDescription) {
+       createIncidentRequestBodyPojo.setShort_description(ShortDescription);
     }
+    @Given("user gives the Description as {string}")
+    public void user_gives_the_description_as(String Description) {
+        createIncidentRequestBodyPojo.setDescription(Description);
+    }
+    @Given("user gives Active as {string}")
+    public void user_gives_active_as(String Active) {
+       createIncidentRequestBodyPojo.setActive(Active);
+    }
+
     @When("user hit the POST method")
     public void user_hit_the_post_method() {
         response = given().log().all().spec(requestSpecBuilder.build()).contentType(ContentType.JSON).body(createIncidentRequestBodyPojo).when().post();
     }
     @Then("validate record is successfully created")
     public void validate_record_is_successfully_created() {
-        response.then().assertThat().statusCode(201).statusLine(Matchers.containsString("Created"));
+        response.then().assertThat().statusCode(201).statusLine(Matchers.containsString("Created")).contentType(ContentType.JSON);
     }
 
     @Given("user set the multiple pathparameters")

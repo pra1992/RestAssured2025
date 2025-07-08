@@ -5,7 +5,7 @@ import io.cucumber.testng.CucumberOptions;
 import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
-        features = {".\\src\\test\\resources\\features\\incident.feature"},
+        features = {".\\src\\test\\resources\\features\\incident.feature:44"},
         glue = {"steps"},
         dryRun = false,
         //tags
@@ -22,7 +22,6 @@ public class TestRunner extends AbstractTestNGCucumberTests {
         @DataProvider(parallel = false)
         @Override
         public Object[][] scenarios() {
-
                 return super.scenarios();
         }
 }
