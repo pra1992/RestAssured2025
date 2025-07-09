@@ -8,6 +8,8 @@ import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 import week3.day2.CreateIncidentRequestBodyPojo;
 
+import java.util.regex.MatchResult;
+
 import static io.restassured.RestAssured.given;
 
 public class IncidentClass {
@@ -81,10 +83,23 @@ public class IncidentClass {
                  .contentType(ContentType);
     }
 
+    public void validateResponse(Response response, int StatusCode, String StatusMessage){
+        response.then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(StatusCode)
+                .statusLine(Matchers.containsString(StatusMessage));
+    }
+
     public String extractValueFromResponse(Response response, String jsonpath){
         return response.then().extract()
                 .jsonPath()
                 .getString(jsonpath);
+    }
+
+    public void validateResponseBody(Response response, String jsonPath, String expectedValue){
+        response.then().assertThat().body(jsonPath, Matchers.equalTo(expectedValue));
     }
 
 }

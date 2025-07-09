@@ -32,14 +32,32 @@ Feature: Validate the POST, GET, PUT, PATCH and DELETE for the Incident Table
     Scenario: user should be able to retrieve a single record using DataTable
       Given user set the basepath "/api/now/table/{tableName}/{sys_id}"
       And user set the multiple pathparameters
-        | tableName | incident                         |
-        | sys_id    | afa29e2e83a62e10557ae5d0deaad3ef |
+        | tableName | incident |
       When user hit the GET method
       Then validate user successfully received the response with the correct sysid
-        | StatusCode    | 200                              |
-        | StatusMessage | OK                               |
-        | Content-Type  | application/json                 |
-        | sys_id        | afa29e2e83a62e10557ae5d0deaad3ef |
+        | StatusCode    | 200              |
+        | StatusMessage | OK               |
+        | Content-Type  | application/json |
+
+  Scenario: Update an Incident from the Incident Table
+    Given user set the basepath "/api/now/table/{tableName}"
+    Given user set the header "Content-Type" as "application/json"
+    And user gives the Short Description as "Update an Incident using Cucumber"
+    And user gives the Description as "Update using cucumber"
+    And user gives Active as "true"
+    When user hit the PUT method
+    Then validate record is successfully Updated
+
+  Scenario: user should be able to Update a single record using DataTable
+    Given user set the basepath "/api/now/table/{tableName}/{sys_id}"
+    And user set the multiple pathparameters
+      | tableName | incident |
+    When user hit the GET method
+    Then validate user successfully received the response with the correct sysid
+      | StatusCode    | 200              |
+      | StatusMessage | OK               |
+      | Content-Type  | application/json |
+
 
   Scenario Outline: Create an Incident from the Incident Table
     Given user set the basepath "/api/now/table/{tableName}"

@@ -4,22 +4,13 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.it.Ma;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.hamcrest.Matchers;
-import week3.day2.CreateIncidentRequestBodyPojo;
-
-import java.util.List;
+import testcase.BaseClass;
 import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 
-public class IncidentSteps {
-    CreateIncidentRequestBodyPojo createIncidentRequestBodyPojo = new CreateIncidentRequestBodyPojo();
-    RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
-    public static Response response = null;
+public class IncidentSteps extends BaseClass {
+
     @Given("user set the baseuri {string} of the service now instance")
     public void user_set_the_baseuri_of_the_service_now_instance(String BaseURI) {
       requestSpecBuilder.setBaseUri(BaseURI);
@@ -44,33 +35,52 @@ public class IncidentSteps {
     }
     @When("user hit the GET method")
     public void user_logs_the_precondition() {
-       response = given().log().all().spec(requestSpecBuilder.build()).when().get();
+       //response = given().log().all().spec(requestSpecBuilder.build()).when().get();
+        response = incidentClass.retriveAllIncidents(requestSpecBuilder.build());
     }
     @Then("validate user successfully received the response")
     public void validate_user_successfully_received_the_response() {
-         response.then().log().all().assertThat().statusCode(200).statusLine(Matchers.containsString("OK")).contentType("application/json");
+        incidentClass.validateResponse(response, 200, "OK", "application/json");
     }
 
     @Given("user gives the Short Description as {string}")
     public void user_gives_the_short_description_as(String ShortDescription) {
-       createIncidentRequestBodyPojo.setShort_description(ShortDescription);
+        requestBodyPojo.setShort_description(ShortDescription);
     }
     @Given("user gives the Description as {string}")
     public void user_gives_the_description_as(String Description) {
-        createIncidentRequestBodyPojo.setDescription(Description);
+        requestBodyPojo.setDescription(Description);
     }
     @Given("user gives Active as {string}")
     public void user_gives_active_as(String Active) {
-       createIncidentRequestBodyPojo.setActive(Active);
+        requestBodyPojo.setActive(Active);
     }
 
     @When("user hit the POST method")
     public void user_hit_the_post_method() {
-        response = given().log().all().spec(requestSpecBuilder.build()).contentType(ContentType.JSON).body(createIncidentRequestBodyPojo).when().post();
+        response = incidentClass.createNewIncident(requestSpecBuilder.build(), requestBodyPojo);
     }
+
+    @When("user hit the PUT method")
+    public void user_hit_the_PUT_method() {
+        response = incidentClass.updateIncident(requestSpecBuilder.build(),Sys_Id,requestBodyPojo);
+    }
+
     @Then("validate record is successfully created")
     public void validate_record_is_successfully_created() {
-        response.then().assertThat().statusCode(201).statusLine(Matchers.containsString("Created")).contentType(ContentType.JSON);
+        incidentClass.validateResponse(response, 201, "Created", "application/json");
+        Sys_Id = incidentClass.extractValueFromResponse(response, "result.sys_id");
+        incidentClass.validateResponseBody(response, "result.sys_id", Sys_Id);
+        incidentClass.validateResponseBody(response, "result.short_description", requestBodyPojo.getShort_description());
+        incidentClass.validateResponseBody(response, "result.description", requestBodyPojo.getDescription());
+    }
+
+    @Then("validate record is successfully Updated")
+    public void validate_record_is_successfully_Updated() {
+        incidentClass.validateResponse(response, 200, "OK", "application/json");
+        incidentClass.validateResponseBody(response, "result.sys_id", Sys_Id);
+        incidentClass.validateResponseBody(response, "result.short_description", requestBodyPojo.getShort_description());
+        incidentClass.validateResponseBody(response, "result.description", requestBodyPojo.getDescription());
     }
 
     @Given("user set the multiple pathparameters")
@@ -81,20 +91,22 @@ public class IncidentSteps {
 //       }
         Map<String, String> maps= PathParams.asMap();
         requestSpecBuilder.addPathParam("tableName", maps.get("tableName"));
-        requestSpecBuilder.addPathParam("sys_id", maps.get("sys_id"));
+        requestSpecBuilder.addPathParam("sys_id", Sys_Id);
     }
 
     @Then("validate user successfully received the response with the correct sysid")
     public void validate_user_successfully_received_the_response_with_the_correct_sysid(DataTable dataTable) {
         Map<String, String> map = dataTable.asMap();
-        response.then()
-                .log()
-                .all()
-                .assertThat()
-                .statusCode(Integer.parseInt(map.get("StatusCode")))
-                .statusLine(Matchers.containsString(map.get("StatusMessage")))
-                .contentType(map.get("Content-Type"))
-                .body("result.sys_id", Matchers.equalTo(map.get("sys_id")));
+//        response.then()
+//                .log()
+//                .all()
+//                .assertThat()
+//                .statusCode(Integer.parseInt(map.get("StatusCode")))
+//                .statusLine(Matchers.containsString(map.get("StatusMessage")))
+//                .contentType(map.get("Content-Type"))
+//                .body("result.sys_id", Matchers.equalTo(map.get("sys_id")));
+        incidentClass.validateResponse(response,Integer.parseInt(map.get("StatusCode")), map.get("StatusMessage"), map.get("Content-Type"));
+        incidentClass.validateResponseBody(response, "result.sys_id", Sys_Id);
         }
     }
 
