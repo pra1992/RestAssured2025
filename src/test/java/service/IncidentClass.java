@@ -1,76 +1,80 @@
 package service;
 
-import com.sun.net.httpserver.Request;
-import io.restassured.http.ContentType;
+import design.ResponseAPI;
+import implementations.RequestImpl;
+
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.Matchers;
-import org.testng.annotations.Test;
 import week3.day2.CreateIncidentRequestBodyPojo;
 
-import java.util.regex.MatchResult;
 
-import static io.restassured.RestAssured.given;
-
-public class IncidentClass {
+public class IncidentClass extends RequestImpl {
     CreateIncidentRequestBodyPojo requestBodyPojo = new CreateIncidentRequestBodyPojo();
 
-    public Response createNewIncident(RequestSpecification requestSpecification, Object Payload){
-           return given()
-                .spec(requestSpecification)
-                .log()
-                .all()
-                .body(Payload)
-                .contentType(ContentType.JSON)
-                .when()
-                .post();
+    public ResponseAPI createNewIncident(RequestSpecification requestSpecification, Object Payload){
+//           return given()
+//                .spec(requestSpecification)
+//                .log()
+//                .all()
+//                .body(Payload)
+//                .contentType(ContentType.JSON)
+//                .when()
+//                .post();
+
+        return post(requestSpecification,Payload);
     }
 
-    public Response retriveAllIncidents(RequestSpecification requestSpecification){
-        return given()
-                .spec(requestSpecification)
-                .log()
-                .all()
-                .when()
-                .get();
+    public ResponseAPI retriveAllIncidents(RequestSpecification requestSpecification){
+//        return given()
+//                .spec(requestSpecification)
+//                .log()
+//                .all()
+//                .when()
+//                .get();
+        return get(requestSpecification);
     }
 
-    public Response retriveAnIncident(RequestSpecification requestSpecification, String sys_id){
-        return given()
-                .spec(requestSpecification)
-                .log()
-                .all()
-                .when()
-                .get("/{sys_id}", sys_id);
+    public ResponseAPI retriveAnIncident(RequestSpecification requestSpecification, String sys_id){
+//        return given()
+//                .spec(requestSpecification)
+//                .log()
+//                .all()
+//                .when()
+//                .get("/{sys_id}", sys_id);
+        return get(requestSpecification,sys_id);
     }
 
-    public Response updateIncident(RequestSpecification requestSpecification, String sys_id, Object Payload){
-        return given()
-                .contentType(ContentType.JSON)
-                .log()
-                .all()
-                .spec(requestSpecification)
-                .body(Payload)
-                .when()
-                .put("/{sys_id}", sys_id);
+    public ResponseAPI updateIncident(RequestSpecification requestSpecification, String sys_id, Object Payload){
+//        return given()
+//                .contentType(ContentType.JSON)
+//                .log()
+//                .all()
+//                .spec(requestSpecification)
+//                .body(Payload)
+//                .when()
+//                .put("/{sys_id}", sys_id);
+        return put(requestSpecification, sys_id, Payload);
     }
 
-    public Response partiallyUpdateIncident(RequestSpecification requestSpecification, String sys_id, Object Payload){
-        return given().spec(requestSpecification)
-                .contentType(ContentType.JSON)
-                .body(Payload)
-                .log()
-                .all()
-                .when()
-                .patch("/{sys_id}", sys_id);
+    public ResponseAPI partiallyUpdateIncident(RequestSpecification requestSpecification, String sys_id, Object Payload){
+//        return given().spec(requestSpecification)
+//                .contentType(ContentType.JSON)
+//                .body(Payload)
+//                .log()
+//                .all()
+//                .when()
+//                .patch("/{sys_id}", sys_id);
+        return put(requestSpecification,sys_id,Payload);
     }
 
     public Response deleteIncident(RequestSpecification requestSpecification, String sys_id){
-        return given()
-                .log()
-                .all().spec(requestSpecification)
-                .when()
-                .delete("/{sys_id}", sys_id);
+//        return given()
+//                .log()
+//                .all().spec(requestSpecification)
+//                .when()
+//                .delete("/{sys_id}", sys_id);
+        return delete(requestSpecification,sys_id);
     }
 
     public void validateResponse(Response response, int StatusCode, String StatusMessage, String ContentType){
