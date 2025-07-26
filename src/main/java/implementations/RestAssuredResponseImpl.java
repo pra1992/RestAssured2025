@@ -4,7 +4,6 @@ import design.ResponseAPI;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ public class RestAssuredResponseImpl implements ResponseAPI {
 
     public RestAssuredResponseImpl(Response response){
         this.response = response;
+        response.then().log().all();
     }
 
     @Override

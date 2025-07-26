@@ -89,7 +89,7 @@ public class IncidentSteps extends BaseClass {
 //       for (int i=0; i<asLists.size(); i++){
 //           requestSpecBuilder.addPathParam(asLists.get(i).get(0), asLists.get(i).get(1));
 //       }
-        Map<String, String> maps= PathParams.asMap();
+        Map<String, String> maps = PathParams.asMap();
         requestSpecBuilder.addPathParam("tableName", maps.get("tableName"));
         requestSpecBuilder.addPathParam("sys_id", Sys_Id);
     }
@@ -101,7 +101,7 @@ public class IncidentSteps extends BaseClass {
 //                .log()
 //                .all()
 //                .assertThat()
-//                .statusCode(Integer.parseInt(map.get("StatusCode")))
+//                .statusCode(Integer.parseInt(map.get("StatusCodgit e")))
 //                .statusLine(Matchers.containsString(map.get("StatusMessage")))
 //                .contentType(map.get("Content-Type"))
 //                .body("result.sys_id", Matchers.equalTo(map.get("sys_id")));
