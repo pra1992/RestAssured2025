@@ -8,13 +8,13 @@ import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseImpl implements ResponseAPI {
-
+public class RestAssuredResponseImpl implements ResponseAPI {
     private Response response;
 
-    public ResponseImpl(Response response){
+    public RestAssuredResponseImpl(Response response){
         this.response = response;
     }
+
     @Override
     public int getStatusCode() {
         return response.getStatusCode();
@@ -33,16 +33,16 @@ public class ResponseImpl implements ResponseAPI {
 
     @Override
     public Map<String, String> getHeaders() {
-        Map<String, String> headers = new HashMap<>();
-        Headers allHeaders = response.headers();
-        for (Header header : allHeaders) {
-            if(headers.containsKey(header.getName())){
-                headers.merge(header.getName(), header.getValue(), String::concat);
-            } else {
-                headers.put(header.getName(), header.getValue());
-            }
-        }
-        return headers;
+       Map<String, String> headers = new HashMap<>();
+       Headers allHeaders=  response.headers();
+     for ( Header header:allHeaders){
+         if(headers.containsKey(header.getName())){
+             headers.merge(header.getName(), header.getValue(), String::concat);
+         }else{
+             headers.put(header.getName(), header.getValue());
+         }
+     }
+    return headers;
     }
 
     @Override

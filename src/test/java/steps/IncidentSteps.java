@@ -36,11 +36,11 @@ public class IncidentSteps extends BaseClass {
     @When("user hit the GET method")
     public void user_logs_the_precondition() {
        //response = given().log().all().spec(requestSpecBuilder.build()).when().get();
-        response = incidentClass.retriveAllIncidents(requestSpecBuilder.build());
+        response = retriveAllIncidents(requestSpecBuilder.build());
     }
     @Then("validate user successfully received the response")
     public void validate_user_successfully_received_the_response() {
-        incidentClass.validateResponse(response, 200, "OK", "application/json");
+        validateResponse(response, 200, "OK", "application/json");
     }
 
     @Given("user gives the Short Description as {string}")
@@ -58,29 +58,29 @@ public class IncidentSteps extends BaseClass {
 
     @When("user hit the POST method")
     public void user_hit_the_post_method() {
-        response = incidentClass.createNewIncident(requestSpecBuilder.build(), requestBodyPojo);
+        response = createNewIncident(requestSpecBuilder.build(), requestBodyPojo);
     }
 
     @When("user hit the PUT method")
     public void user_hit_the_PUT_method() {
-        response = incidentClass.updateIncident(requestSpecBuilder.build(),Sys_Id,requestBodyPojo);
+        response = updateIncident(requestSpecBuilder.build(),Sys_Id,requestBodyPojo);
     }
 
     @Then("validate record is successfully created")
     public void validate_record_is_successfully_created() {
-        incidentClass.validateResponse(response, 201, "Created", "application/json");
-        Sys_Id = incidentClass.extractValueFromResponse(response, "result.sys_id");
-        incidentClass.validateResponseBody(response, "result.sys_id", Sys_Id);
-        incidentClass.validateResponseBody(response, "result.short_description", requestBodyPojo.getShort_description());
-        incidentClass.validateResponseBody(response, "result.description", requestBodyPojo.getDescription());
+        validateResponse(response, 201, "Created", "application/json");
+        Sys_Id = extractValueFromResponse(response, "result.sys_id");
+        validateResponseBody(response, "result.sys_id", Sys_Id);
+        validateResponseBody(response, "result.short_description", requestBodyPojo.getShort_description());
+        validateResponseBody(response, "result.description", requestBodyPojo.getDescription());
     }
 
     @Then("validate record is successfully Updated")
     public void validate_record_is_successfully_Updated() {
-        incidentClass.validateResponse(response, 200, "OK", "application/json");
-        incidentClass.validateResponseBody(response, "result.sys_id", Sys_Id);
-        incidentClass.validateResponseBody(response, "result.short_description", requestBodyPojo.getShort_description());
-        incidentClass.validateResponseBody(response, "result.description", requestBodyPojo.getDescription());
+        validateResponse(response, 200, "OK", "application/json");
+        validateResponseBody(response, "result.sys_id", Sys_Id);
+        validateResponseBody(response, "result.short_description", requestBodyPojo.getShort_description());
+        validateResponseBody(response, "result.description", requestBodyPojo.getDescription());
     }
 
     @Given("user set the multiple pathparameters")
@@ -105,8 +105,8 @@ public class IncidentSteps extends BaseClass {
 //                .statusLine(Matchers.containsString(map.get("StatusMessage")))
 //                .contentType(map.get("Content-Type"))
 //                .body("result.sys_id", Matchers.equalTo(map.get("sys_id")));
-        incidentClass.validateResponse(response,Integer.parseInt(map.get("StatusCode")), map.get("StatusMessage"), map.get("Content-Type"));
-        incidentClass.validateResponseBody(response, "result.sys_id", Sys_Id);
+        validateResponse(response,Integer.parseInt(map.get("StatusCode")), map.get("StatusMessage"), map.get("Content-Type"));
+        validateResponseBody(response, "result.sys_id", Sys_Id);
         }
     }
 

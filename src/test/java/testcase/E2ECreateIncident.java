@@ -9,16 +9,16 @@ public class E2ECreateIncident extends BaseClass {
         requestBodyPojo.setShort_description("Create record using service model");
         requestBodyPojo.setDescription("Create record using service model");
         requestBodyPojo.setActive("true");
-       response = incidentClass.createNewIncident(requestSpecBuilder.build(), requestBodyPojo);
-       incidentClass.validateResponse(response, 201, "Created", "application/json");
-        Sys_Id = incidentClass.extractValueFromResponse(response, "result.sys_id");
+        response = createNewIncident(requestSpecBuilder.build(), requestBodyPojo);
+        validateResponse(response, 201, "Created", "application/json");
+        Sys_Id = extractValueFromResponse(response, "result.sys_id");
     }
 
     @Test(priority = 2)
     public void retriveARecord(){
-       response= incidentClass.retriveAnIncident(requestSpecBuilder.build(), Sys_Id);
-       incidentClass.validateResponse(response, 200, "OK", "application/json");
-       incidentClass.validateResponseBody(response, Sys_Id, "result.sys_id");
+       response= retriveAnIncident(requestSpecBuilder.build(), Sys_Id);
+       validateResponse(response, 200, "OK", "application/json");
+       validateResponseBody(response, "result.sys_id", Sys_Id);
     }
 
     @Test(priority = 3)
@@ -26,9 +26,9 @@ public class E2ECreateIncident extends BaseClass {
         requestBodyPojo.setShort_description("Update record using service model");
         requestBodyPojo.setDescription("Update record using service model");
         requestBodyPojo.setActive("true");
-        response = incidentClass.updateIncident(requestSpecBuilder.build(), Sys_Id,requestBodyPojo);
-        incidentClass.validateResponse(response,200, "OK", "application/json" );
-        incidentClass.validateResponseBody(response, Sys_Id, "result.sys_id");
+        response = updateIncident(requestSpecBuilder.build(), Sys_Id,requestBodyPojo);
+        validateResponse(response,200, "OK", "application/json" );
+        validateResponseBody(response, "result.sys_id",Sys_Id );
     }
 
     @Test(priority = 4)
@@ -36,20 +36,20 @@ public class E2ECreateIncident extends BaseClass {
         requestBodyPojo.setShort_description("Partially update record using service model");
         requestBodyPojo.setDescription("Partially update record using service model");
         requestBodyPojo.setActive("true");
-        response = incidentClass.partiallyUpdateIncident(requestSpecBuilder.build(),Sys_Id, requestBodyPojo);
-        incidentClass.validateResponse(response, 200, "OK", "application/json");
-        incidentClass.validateResponseBody(response, Sys_Id, "result.sys_id");
+        response = partiallyUpdateIncident(requestSpecBuilder.build(),Sys_Id, requestBodyPojo);
+        validateResponse(response, 200, "OK", "application/json");
+        validateResponseBody(response, "result.sys_id", Sys_Id);
 
     }
     @Test(priority = 5)
     public void deleteIncident(){
-       response = incidentClass.deleteIncident(requestSpecBuilder.build(), Sys_Id);
-       incidentClass.validateResponse(response,204, "No Content");
+       response = deleteIncident(requestSpecBuilder.build(), Sys_Id);
+       validateResponse(response,204, "No Content");
     }
 
     @Test(priority = 6)
     public void retrieveDeletedIncident(){
-        response = incidentClass.retriveAnIncident(requestSpecBuilder.build(), Sys_Id);
-        incidentClass.validateResponse(response, 404, "Not Found", "application/json");
+        response = retriveAnIncident(requestSpecBuilder.build(), Sys_Id);
+        validateResponse(response, 404, "Not Found", "application/json");
     }
 }
