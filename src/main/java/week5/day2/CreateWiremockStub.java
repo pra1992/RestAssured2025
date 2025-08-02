@@ -12,7 +12,7 @@ public class CreateWiremockStub {
 
         //As second step created a static response stubbing
         ResponseDefinitionBuilder responseMocking = WireMock.aResponse()
-                .withBody("Hi! welcome to wiremocking");
+                .withBody("This is simple sample stub");
 
         //Now map the request and response by creating Wiremock Stub
         WireMock.stubFor(mappingBuilder.willReturn(responseMocking));
